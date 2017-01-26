@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>UplaodBoy Link Grabber</title>
+</head>
+<body>
+ICG UploadBoy Link Grabber Coded By 504w
+<br/>
+<br/>
+<form action="" method="post">
+
+	Inter File Id:<br/>
+	<input type="text" name="id" placeholder="file Id ...">
+	<br/><br/>
+	file id is text after domain <br/>
+	for Example : <br/>
+	http://uploadboy.me/<b>0v89o0uczqvf</b>/display-name-author-permalink.zip.html =><br/>
+	File id : <b>0v89o0uczqvf</b>
+	<br/><br/>
+	<input type="submit" name="submit">
+	<br/><br/>
+
+</form>
+</body>
+</html>
+
+<?php
+set_time_limit(0);
+if(isset($_POST['submit']) && isset($_POST["id"])){
+	$id = $_POST['id'];
+	$url = "http://uploadboy.com/".$id.".html";
+	$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)';
+	$c = curl_init();
+	$opt = array(
+		CURLOPT_URL=>$url,
+		CURLOPT_POST=>false,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_FOLLOWLOCATION => false,
+		CURLOPT_REFERER => $url,
+		CURLOPT_USERAGENT=>$agent,
+		CURLOPT_AUTOREFERER=>true
+		);
+	$data = array(
+		"op"=>"download1",
+		"usr_login"=>"",
+		"id"=>"$id",
+		"fname"=>"",
+		"referer"=>"$url",
+		"usr_resolution"=>"1368x768",
+		"usr_os"=>"-",
+		"usr_browser"=>"-",
+		"method_free"=>"دانلود رایگان ( کُند )"
+		);
+	$data2 = array(
+		"op"=>"download2",
+		"rand"=>"",
+		"id"=>"$id",
+		"referer"=>"$url",
+		"usr_resolution"=>"-",
+		"usr_os"=>"-",
+		"usr_browser"=>"-",
+		"method_free"=>"دانلود رایگان ( کُند )",
+		"method_premium"=>"",
+		"down_script"=>"1"
+
+		);
+	$opt2 = array(
+		CURLOPT_URL=>$url,
+		CURLOPT_POST=>true,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_FOLLOWLOCATION => false,
+		CURLOPT_REFERER => $url,
+		CURLOPT_USERAGENT=>$agent,
+		CURLOPT_AUTOREFERER=>true,
+		CURLOPT_POSTFIELDS=>$data
+		);
+	$opt3 = array(
+		CURLOPT_URL=>$url,
+		CURLOPT_POST=>true,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_FOLLOWLOCATION => false,
+		CURLOPT_REFERER => $url,
+		CURLOPT_USERAGENT=>$agent,
+		CURLOPT_AUTOREFERER=>true,
+		CURLOPT_POSTFIELDS=>$data2
+		);
+	curl_setopt_array($c, $opt);
+	$res = curl_exec($c);
+		$c2 = curl_init();
+		curl_setopt_array($c2, $opt2);
+		$res2 = curl_exec($c2);
+		$c3 = curl_init();
+		curl_setopt_array($c3, $opt3);
+		$res3 = curl_exec($c3);
+	curl_close($c3);
+	curl_close($c2);
+	curl_close($c);
+
+	$dom = new DOMDocument;
+	@$dom->loadHTML($res3);
+	foreach ($dom->getElementsByTagName('a') as $node){
+	  if(preg_match("/com:/", $node->getAttribute("href"))){
+	  		  echo '<a href='.$node->getAttribute("href").'>Download</a><br/>';
+	  		  break;
+	  }
+	}
+}
+
+
+
+
+?>
